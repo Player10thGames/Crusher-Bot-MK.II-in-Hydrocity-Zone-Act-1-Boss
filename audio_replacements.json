@@ -1,3 +1,6 @@
 {
 	"boss_h": { "File": "boss_hoshi.ogg", "Type": "Music", "Name": "Sonic Hoshi Version", "LoopStart": "0" },
+		"Fall": { "File": "Fall.ogg", "Type": "Sound" },
+		"Impact2": { "File": "Impact2.ogg", "Type": "Sound" },
+		"Strain": { "File": "Strain.ogg", "Type": "Sound" }
 }

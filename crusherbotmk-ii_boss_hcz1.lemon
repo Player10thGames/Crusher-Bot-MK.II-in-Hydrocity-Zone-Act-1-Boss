@@ -1,0 +1,219 @@
+// Crusher-Bot MK.II Boss Script for Hydrocity Zone Act 1
+// Replaces Big Shaker
+
+// Global Variables
+global u8 crusherbot.state
+global u8 crusherbot.hits
+global u16 crusherbot.timer
+global float crusherbot.x
+global float crusherbot.y
+global float crusherbot.vel_x
+global float crusherbot.vel_y
+
+// Boss States
+#define STATE_INITIALIZATION    0x01
+#define STATE_FALLING_INTRO     0x02
+#define STATE_LANDING_INTRO     0x03
+#define STATE_SHOT_BULLETS      0x04
+#define STATE_LASER_ATTACK      0x05
+#define STATE_LAUNCHING_UP      0x06
+#define STATE_FALLING_DOWN      0x07
+#define STATE_HIT_REACTION      0x08
+#define STATE_DEFEATED          0x09
+#define STATE_VICTORY_SIGNPOST  0x0a
+
+function void CrusherBot_Update()
+{
+    // Handle Boss Logic based on state
+    if (crusherbot.state == STATE_INITIALIZATION)
+    {
+        CrusherBot_Init()
+    }
+    else if (crusherbot.state == STATE_FALLING_INTRO)
+    {
+        CrusherBot_FallingIntro()
+    }
+    else if (crusherbot.state == STATE_LANDING_INTRO)
+    {
+        CrusherBot_LandingIntro()
+    }
+    else if (crusherbot.state == STATE_SHOT_BULLETS)
+    {
+        CrusherBot_ShotBullets()
+    }
+    else if (crusherbot.state == STATE_LASER_ATTACK)
+    {
+        CrusherBot_LaserAttack()
+    }
+    else if (crusherbot.state == STATE_LAUNCHING_UP)
+    {
+        CrusherBot_LaunchingUp()
+    }
+    else if (crusherbot.state == STATE_FALLING_DOWN)
+    {
+        CrusherBot_FallingDown()
+    }
+    else if (crusherbot.state == STATE_HIT_REACTION)
+    {
+        CrusherBot_HitReaction()
+    }
+    else if (crusherbot.state == STATE_DEFEATED)
+    {
+        CrusherBot_Defeated()
+    }
+    else if (crusherbot.state == STATE_VICTORY_SIGNPOST)
+    {
+        CrusherBot_VictorySignpost()
+    }
+
+    // Update position
+    crusherbot.x += crusherbot.vel_x
+    crusherbot.y += crusherbot.vel_y
+    
+    // Render Boss
+    CrusherBot_Render()
+}
+
+function void CrusherBot_Init()
+{
+    crusherbot.x = 0x2400
+    crusherbot.y = 0x0400
+    crusherbot.hits = 0
+    crusherbot.state = STATE_FALLING_INTRO
+    crusherbot.vel_y = 4.0
+    
+    // Play Boss Music
+    Audio.playAudio("boss_h", AudioContext.CONTEXT_MUSIC)
+}
+
+function void CrusherBot_FallingIntro()
+{
+    if (crusherbot.y >= 0x05c0)
+    {
+        crusherbot.y = 0x05c0
+        crusherbot.vel_y = 0
+        crusherbot.state = STATE_LANDING_INTRO
+        crusherbot.timer = 60
+        Audio.playSound("Impact2")
+    }
+}
+
+function void CrusherBot_LandingIntro()
+{
+    if (crusherbot.timer > 0)
+    {
+        crusherbot.timer--
+    }
+    else
+    {
+        crusherbot.vel_y = -2.0
+        if (crusherbot.y <= 0x0500)
+        {
+            crusherbot.vel_y = 0
+            crusherbot.state = STATE_SHOT_BULLETS
+            crusherbot.timer = 120
+        }
+    }
+}
+
+function void CrusherBot_ShotBullets()
+{
+    if (crusherbot.timer % 30 == 0)
+    {
+        // Logic to spawn bullets would go here
+        Audio.playSound("Strain")
+    }
+    
+    if (crusherbot.timer > 0)
+    {
+        crusherbot.timer--
+    }
+    else
+    {
+        crusherbot.state = STATE_LASER_ATTACK
+        crusherbot.timer = 180
+    }
+}
+
+function void CrusherBot_LaserAttack()
+{
+    // Laser logic
+    if (crusherbot.timer > 0)
+    {
+        crusherbot.timer--
+    }
+    else
+    {
+        crusherbot.state = STATE_LAUNCHING_UP
+        crusherbot.vel_y = -6.0
+    }
+}
+
+function void CrusherBot_LaunchingUp()
+{
+    if (crusherbot.y <= 0x0300)
+    {
+        crusherbot.state = STATE_FALLING_DOWN
+        crusherbot.vel_y = 8.0
+        Audio.playSound("Fall")
+    }
+}
+
+function void CrusherBot_FallingDown()
+{
+    if (crusherbot.y >= 0x05c0)
+    {
+        crusherbot.y = 0x05c0
+        crusherbot.vel_y = 0
+        Audio.playSound("Impact2")
+        crusherbot.state = STATE_SHOT_BULLETS
+        crusherbot.timer = 120
+    }
+}
+
+function void CrusherBot_HitReaction()
+{
+    crusherbot.hits++
+    if (crusherbot.hits >= 6)
+    {
+        crusherbot.state = STATE_DEFEATED
+        crusherbot.timer = 120
+    }
+    else
+    {
+        crusherbot.state = STATE_SHOT_BULLETS // Resume pattern
+        crusherbot.timer = 60
+    }
+}
+
+function void CrusherBot_Defeated()
+{
+    crusherbot.vel_y = 1.0
+    if (crusherbot.timer > 0)
+    {
+        crusherbot.timer--
+        // Spawn explosions logic
+    }
+    else
+    {
+        crusherbot.state = STATE_VICTORY_SIGNPOST
+    }
+}
+
+function void CrusherBot_VictorySignpost()
+{
+    // Logic to spawn signpost
+}
+
+function void CrusherBot_Render()
+{
+    u64 spriteKey = "crusherbot_idle"
+    if (crusherbot.state == STATE_HIT_REACTION)
+        spriteKey = "crusherbot_hurt"
+    else if (crusherbot.state == STATE_LASER_ATTACK)
+        spriteKey = "crusherbot_laser"
+    else if (crusherbot.state == STATE_DEFEATED)
+        spriteKey = "crusherbot_defeated"
+
+    Renderer.drawCustomSprite(spriteKey, crusherbot.x, crusherbot.y, 0x00, 0, 0x2000)
+}

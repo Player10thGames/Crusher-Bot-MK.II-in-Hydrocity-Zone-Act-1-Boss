@@ -1,0 +1,19 @@
+// Main Entry Point for Crusher-Bot MK.II Boss Mod
+// Replaces Big Shaker in HCZ1
+
+include crusherbotmk-ii_boss_hcz1
+
+// Hook into the Big Shaker object update function
+// Assuming the function name is Boss_HCZ1_BigShaker based on standard S3AIR naming
+function void Boss_HCZ1_BigShaker.Update()
+{
+    // Override the original Big Shaker logic with Crusher-Bot MK.II
+    CrusherBot_Update()
+}
+
+// Hook into the Big Shaker initialization
+function void Boss_HCZ1_BigShaker.Init()
+{
+    // Initialize our custom boss
+    CrusherBot_Init()
+}

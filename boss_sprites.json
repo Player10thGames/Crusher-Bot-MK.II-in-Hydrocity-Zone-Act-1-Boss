@@ -1,0 +1,12 @@
+{
+	"crusherbot_idle": { "File": "Crusher-Bot MK.II (Idle).png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"crusherbot_hurt": { "File": "Crusher-Bot MK.II (Hurt).png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"crusherbot_laser": { "File": "Crusher-Bot MK.II (Laser).png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"crusherbot_defeated": { "File": "Crusher-Bot MK.II (Defeated).png", "Rect": "0,0,64,64", "Center": "32,32" },
+	"crusherbot_bullet_1": { "File": "Crusher-Bot MK.II (Bullet_1).png", "Rect": "0,0,16,16", "Center": "8,8" },
+	"crusherbot_bullet_2": { "File": "Crusher-Bot MK.II (Bullet_2).png", "Rect": "0,0,16,16", "Center": "8,8" },
+	"crusherbot_broken_tl": { "File": "Crusher-Bot MK.II (Broken_TopLeft).png", "Rect": "0,0,32,32", "Center": "16,16" },
+	"crusherbot_broken_tr": { "File": "Crusher-Bot MK.II (Broken_TopRight).png", "Rect": "0,0,32,32", "Center": "16,16" },
+	"crusherbot_broken_bl": { "File": "Crusher-Bot MK.II (Broken_BottomLeft).png", "Rect": "0,0,32,32", "Center": "16,16" },
+	"crusherbot_broken_br": { "File": "Crusher-Bot MK.II (Broken_BottomRight).png", "Rect": "0,0,32,32", "Center": "16,16" }
+}
